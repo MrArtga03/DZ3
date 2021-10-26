@@ -9,58 +9,56 @@ namespace DZ3
     {
         static void Main(string[] args)
         {
-            //инициализируем списки
-            List<object> strings = new List<object> { "бейбик" };
-            List<object> ints = new List<object> { 1918 };
-
-            //Класс, который содержит только строки
-            MyClass myClass1 = new MyClass();
-            strings = (List<object>)myClass1.Add(strings, "мармеладки"); //Добавление в массив строки
-            strings = (List<object>)myClass1.RemoveAt(strings, 0);       //Удаление в массиве строки
+            object[] myIntArray = new object[] { 1, 2, 3, 4 };                                //Список целочисленных чисел
+            object[] myStringArray = new object[] { "GitHub", "КПК", "ХОЧУ 5, ИЛИ НЕТ..." };  //Список Строк
 
             //Класс, который содержит только числа
-            MyClass myClass2 = new MyClass();
-            ints = (List<object>)myClass2.Add(ints, 1);      //Добавление в массив числа
-            ints = (List<object>)myClass1.RemoveAt(ints, 0); //Удаление в массиве числа
+            Massiv IntMassiv = new Massiv();
+            //myIntArray = (object[])IntMassiv.RemoveAt(ref myIntArray, 2);
+            myIntArray = (object[])IntMassiv.Add(ref myIntArray, 0, 3);
 
+            //Класс, который содержит только строки
+            Massiv StringMassiv = new Massiv();
+            myStringArray = (object[])StringMassiv.RemoveAt(ref myStringArray, 1);
+            myStringArray = (object[])StringMassiv.Add(ref myStringArray, "чача", 0);
 
-
-
-            //Выводим список строк
-            for (int i = 0; i < strings.Count; i++)
-            {
-                Console.Write(strings[i]);
-            }
+            //Выводим список целочисленных чисел
+            ShowArr(myIntArray);
 
             Console.WriteLine();
 
-            //Выводим список чисел
-            for (int i = 0; i < ints.Count; i++)
-            {
-                Console.Write(ints[i]);
-            }
+            ShowArr(myStringArray);
+
+            static void ShowArr(object[] arr) { for (int i = 0; i < arr.Length; i++) Console.Write(arr[i] + " ");  }
         }
     }
 }
 
-//Интерфейс задающий сигнатуры методам Add и RemoveAt
-interface ISignature
-{
-    object Add(List<object> list, object item);
-    object RemoveAt(List<object> list, int item);
-}
 
-class MyClass : ISignature
+class Massiv
 {
-    public object Add(List<object> list, object item)
+    public object Add(ref object[] arr, object el, int index)
     {
-        list.Add(item);
-        return list;
+        object[] newArr = new object[arr.Length + 1];
+        newArr[index] = el;
+
+        for (int i = 0; i < arr.Length; i++) newArr[i] = arr[i]; 
+        for (int i = index; i < arr.Length; i++) newArr[i + 1] = arr[i];
+
+        arr = newArr;
+
+        return arr;
     }
 
-    public object RemoveAt(List<object> list, int item)
+    public object RemoveAt(ref object[] arr, int index)
     {
-        list.RemoveAt(item);
-        return list;
+        object[] newArr = new object[arr.Length - 1];
+
+        for (int i = 0; i < index; i++) newArr[i] = arr[i]; 
+        for (int i = index + 1; i < arr.Length; i++) newArr[i - 1] = arr[i];
+
+        arr = newArr;
+
+        return arr;
     }
 }
